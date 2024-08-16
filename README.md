@@ -10,14 +10,43 @@ Installation using pip (a Python package manager):
 pip install simple-telegram-api
 ```
 
-## Updating
+## Example
 
-To update to the latest version, use:
+A simple echo bot:
 
-```
-pip install simple-telegram-api --upgrade
+```python
+from simple_telegram_api import TelegramBot
+
+BOT_TOKEN = "BOT_TOKEN"
+
+bot = TelegramBot(BOT_TOKEN)
+
+# Skip old messages before bot is running.
+bot.reset_updates()
+
+print("Bot is running.")
+while True:
+    updates = bot.get_updates()
+
+    # Check if it's empty.
+    if updates:
+        print(updates)
+        bot.reset_updates(updates=updates)
+
+        # For multiple coming up messages.
+        for update in updates["result"]:
+            chat_id = update["message"]["chat"]["id"]
+            message_id = update["message"]["message_id"]
+            user_text = update["message"]["text"]
+            
+            bot_message = bot.send_message(chat_id=chat_id, text=user_text)
 ```
 
 ## Recommendations
 
-To make sure everything runs smoothly and follows Telegram's rules, it's best to add a short break between API requests. It's a good idea to use ```time.sleep(1)```, as shown in the examples.
+If `updates` is not provided in `reset_updates()`, new updates will be fetched automatically. Use the result from `get_updates()` as `updates`, as shown in the example.
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
+
