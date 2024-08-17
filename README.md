@@ -36,7 +36,6 @@ while True:
         # For multiple coming up messages.
         for update in updates["result"]:
             chat_id = update["message"]["chat"]["id"]
-            message_id = update["message"]["message_id"]
             user_text = update["message"]["text"]
             
             bot_message = bot.send_message(chat_id=chat_id, text=user_text)
@@ -49,4 +48,3 @@ If `updates` is not provided in `reset_updates()`, new updates will be fetched a
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
-
