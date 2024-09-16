@@ -19,7 +19,8 @@ while True:
         # For multiple coming up messages.
         for update in updates["result"]:
             chat_id = update["message"]["chat"]["id"]
-            user_text = update["message"]["text"]
+            user_message = update["message"]["text"]
             
-            bot_message = bot.send_message(chat_id=chat_id, text=user_text)
+            bot_update = bot.send_message(user_message, chat_id=chat_id)
+            print(bot_update)
 
