@@ -9,42 +9,41 @@ class TelegramBot:
         self.token = token
         self.api_url = f"https://api.telegram.org/bot{self.token}"
 
-    def send_message(self, chat_id, text, reply_to_message=False, message_id=None) -> dict:
+    def send_message(self, text, chat_id, reply_to_message=False, message_id=None) -> dict:
         """
         Args:
-            chat_id (int): The ID of the chat where you want to send the message.
             text (str): The message you want to send.
+            chat_id (int): The ID of the chat where you want to send the message.
             reply_to_message (bool): True if you want to reply to a message. Default is False.
             message_id (int): The ID of the message you want to reply to. It is needed if reply_to_message is True.
         """
         url = f"{self.api_url}/sendMessage"
         if reply_to_message and message_id != None:
             data = {
-            "chat_id": chat_id,
             "text": text,
+            "chat_id": chat_id,
             "reply_to_message_id": message_id
             }
         else:
             data = {
-            "chat_id": chat_id,
-            "text": text
+            "text": text,
+            "chat_id": chat_id
             }
         response = requests.post(url, json=data)
-        print(response.json())
         return response.json()
     
-    def edit_message(self, chat_id, text, message_id) -> dict:
+    def edit_message(self, text, chat_id, message_id) -> dict:
         """
         Args:
-            chat_id (int): The ID of the chat where you want to send the message.
             text (str): New message.
+            chat_id (int): The ID of the chat where you want to send the message.
             message_id (int): The ID of the message you want to edit.
         """
         url = f"{self.api_url}/editMessageText"
         data = {
+            "text": text,
             "chat_id": chat_id,
-            "message_id": message_id,
-            "text": text
+            "message_id": message_id
         }
         response = requests.post(url, json=data)
         return response.json()
@@ -53,7 +52,7 @@ class TelegramBot:
         """
         Get new messages.
 
-        This method gets updates from the server.
+        This method gets updates from Telegram.
 
         Args:
             offset (int): The ID of the last Update. Default is None.
@@ -79,7 +78,7 @@ class TelegramBot:
         """
         Clear old messages and get new ones.
 
-        This method gets updates from the server and skips old messages.
+        This method gets updates from Telegram and skips old messages.
 
         Args:
             updates (dict or None): Updates from `get_updates()`. If None, get new updates.
