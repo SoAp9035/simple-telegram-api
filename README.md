@@ -58,6 +58,39 @@ This function gets new messages from Telegram.
 updates = bot.get_updates()
 ```
 
+#### Example Get Updates Output
+
+Here is an example of the output from the `get_updates()` function:
+
+```json
+{
+    "ok": True,
+    "result": [
+        {
+            "update_id": 123456789,
+            "message": {
+                "message_id": 123,
+                "from": {
+                    "id": 123456789,
+                    "is_bot": False,
+                    "first_name": "Person Name",
+                    "username": "person",
+                    "language_code": "en"
+                },
+                "chat": {
+                    "id": 123456789,
+                    "first_name": "Person Name",
+                    "username": "person",
+                    "type": "private"
+                },
+                "date": 1733920402,
+                "text": "Hi!"
+            }
+        }
+    ]
+}
+```
+
 ### Reset Updates
 
 This function gets updates from Telegram and skips old messages.
@@ -78,6 +111,33 @@ To reply to a message:
 
 ```python
 bot.send_message(text=text, chat_id=chat_id, reply_to_message=True, message_id=message_id)
+```
+
+#### Example Send Message Output
+
+Here is an example of the output from the `send_message()` function:
+
+```json
+{
+    "ok": True,
+    "result": {
+        "message_id": 124,
+        "from": {
+            "id": 123456789,
+            "is_bot": True,
+            "first_name": "Bot",
+            "username": "bot"
+        },
+        "chat": {
+            "id": 123456789,
+            "first_name": "Person Name",
+            "username": "person",
+            "type": "private"
+        },
+        "date": 1733920404,
+        "text": "Hi!"
+    }
+}
 ```
 
 ### Edit Message
