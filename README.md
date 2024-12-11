@@ -62,7 +62,7 @@ updates = bot.get_updates()
 
 Here is an example of the output from the `get_updates()` function:
 
-```json
+```python
 {
     "ok": True,
     "result": [
@@ -117,7 +117,7 @@ bot.send_message(text=text, chat_id=chat_id, reply_to_message=True, message_id=m
 
 Here is an example of the output from the `send_message()` function:
 
-```json
+```python
 {
     "ok": True,
     "result": {
