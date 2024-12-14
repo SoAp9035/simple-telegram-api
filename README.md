@@ -21,7 +21,7 @@ BOT_TOKEN = "BOT_TOKEN"
 
 bot = TelegramBot(BOT_TOKEN)
 
-# Skip old messages before bot is running.
+# Delete old messages before bot is running.
 bot.reset_updates()
 
 print("Bot is running.")
@@ -93,10 +93,10 @@ Here is an example of the output from the `get_updates()` function:
 
 ### Reset Updates
 
-This function gets updates from Telegram and skips old messages.
+This function deletes old messages from updates.
 
 ```python
-bot.reset_updates()
+bot.reset_updates(updates=updates)
 ```
 
 ### Send Message

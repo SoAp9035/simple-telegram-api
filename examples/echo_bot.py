@@ -4,7 +4,7 @@ BOT_TOKEN = "BOT_TOKEN"
 
 bot = TelegramBot(BOT_TOKEN)
 
-# Skip old messages before bot is running.
+# Delete old messages before bot is running.
 bot.reset_updates()
 
 print("Bot is running.")
