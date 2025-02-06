@@ -1,0 +1,44 @@
+# Dependencies
+node_modules/
+vendor/
+.env
+
+# IDE and Editor files
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python packaging
+setup.py
+*.egg-info/
+dist/
+build/
+
+# Build outputs
+out/
+
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# Cache and temporary files
+.cache/
+.temp/
+*.tmp
+*.swp
+
+# Coverage and test outputs
+coverage/
+.nyc_output/
+
+# Optional: Package manager locks
+# package-lock.json
+# yarn.lock

@@ -2,6 +2,10 @@
 
 A simple and easy-to-use Python library for Telegram bots. This library allows you to send messages, edit messages, fetch updates, and handle messages easily.
 
+## Getting a Bot Token
+
+To get a bot token, message [@BotFather](https://t.me/botfather) on Telegram and follow the instructions to create a new bot. BotFather will provide you with a token that looks like `123456789:ABCdefGHIjklmNOPQrstUVwxyz`.
+
 ## Installation
 
 Installation using pip (a Python package manager):
