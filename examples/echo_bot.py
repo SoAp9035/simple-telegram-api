@@ -1,5 +1,6 @@
 from simple_telegram_api import TelegramBot
 
+
 BOT_TOKEN = "BOT_TOKEN"
 
 bot = TelegramBot(BOT_TOKEN)
