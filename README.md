@@ -1,6 +1,6 @@
-# Simple Telegram Api
+# Simple Telegram API
 
-A simple and easy-to-use Python library for Telegram bots. This library allows you to send messages, edit messages, fetch updates, and handle messages easily.
+A simple and easy-to-use Python wrapper for Telegram bots. This library allows you to send messages, edit messages, fetch updates, and handle messages easily.
 
 ## Getting a Bot Token
 
@@ -34,7 +34,7 @@ while True:
     updates = bot.get_updates()
 
     # Check if it's empty.
-    if updates:
+    if updates["result"]:
         print(updates)
         bot.reset_updates(updates=updates)
 
@@ -157,4 +157,4 @@ If `updates` is not provided in `reset_updates()`, new updates will be fetched a
 
 ## License
 
-[MIT](https://choosealicense.com/licenses/mit/)
+This project is licensed under the [MIT](https://choosealicense.com/licenses/mit/) License.
