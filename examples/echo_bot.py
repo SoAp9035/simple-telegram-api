@@ -13,7 +13,7 @@ while True:
     updates = bot.get_updates()
 
     # Check if it's empty.
-    if updates:
+    if updates["result"]:
         print(updates)
         bot.reset_updates(updates=updates)
 
@@ -24,4 +24,3 @@ while True:
             
             bot_update = bot.send_message(user_message, chat_id=chat_id)
             print(bot_update)
-

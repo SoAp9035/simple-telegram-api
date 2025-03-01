@@ -1,15 +1,12 @@
 import requests
 
+
 class TelegramBot:
-    def __init__(self, token) -> None:
-        """
-        Args:
-            token (str): Telegram bot token.
-        """
+    def __init__(self, token: str) -> None:
         self.token = token
         self.api_url = f"https://api.telegram.org/bot{self.token}"
 
-    def send_message(self, text, chat_id, reply_to_message=False, message_id=None) -> dict:
+    def send_message(self, text: str, chat_id: int, reply_to_message: bool = False, message_id: int = None) -> dict | None:
         """
         Args:
             text (str): The message you want to send.
@@ -30,9 +27,19 @@ class TelegramBot:
             "chat_id": chat_id
             }
         response = requests.post(url, json=data)
-        return response.json()
+
+        if response.status_code == 200:
+            return response.json()
+        else:
+            try:
+               error_msg = f"Error {response.json()["error_code"]}: {response.json()["description"]}"
+            except Exception:
+                error_msg = f"Error {response.status_code}: {response.text}"
+            finally:
+                print(error_msg)
+                return None
     
-    def edit_message(self, text, chat_id, message_id) -> dict:
+    def edit_message(self, text: str, chat_id: int, message_id: int) -> dict | None:
         """
         Args:
             text (str): New message.
@@ -46,9 +53,19 @@ class TelegramBot:
             "message_id": message_id
         }
         response = requests.post(url, json=data)
-        return response.json()
+        
+        if response.status_code == 200:
+            return response.json()
+        else:
+            try:
+               error_msg = f"Error {response.json()["error_code"]}: {response.json()["description"]}"
+            except Exception:
+                error_msg = f"Error {response.status_code}: {response.text}"
+            finally:
+                print(error_msg)
+                return None
 
-    def get_updates(self, offset=None, timeout=30):
+    def get_updates(self, offset: int = None, timeout: int = 30) -> dict | None:
         """
         Get new messages.
 
@@ -65,14 +82,16 @@ class TelegramBot:
         }
         response = requests.post(url, json=data)
 
-        if "result" in response.json():
-            if response.json()["result"]:
-                return response.json()
-            else:
-                return None
+        if response.status_code == 200:
+            return response.json()
         else:
-            print(f"Error {response.json()["error_code"]}: {response.json()["description"]}")
-            return None
+            try:
+               error_msg = f"Error {response.json()["error_code"]}: {response.json()["description"]}"
+            except Exception:
+                error_msg = f"Error {response.status_code}: {response.text}"
+            finally:
+                print(error_msg)
+                return None
     
     def reset_updates(self, updates=None, timeout=5) -> None:
         """
@@ -88,9 +107,8 @@ class TelegramBot:
             If `updates` is not provided, new updates will be fetched automatically.
             Use the result from `get_updates()` as `updates`. (Recommended)
         """
-        if updates is None:
-            updates = self.get_updates(timeout=timeout)
         if updates:
             offset = updates["result"][-1]["update_id"] + 1
             self.get_updates(offset=offset, timeout=0)
-
+        else:
+            updates = self.get_updates(timeout=timeout)
