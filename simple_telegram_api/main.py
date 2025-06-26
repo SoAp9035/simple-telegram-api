@@ -1,114 +1,176 @@
+import json
 import requests
+from .exceptions import TelegramBotError
 
 
 class TelegramBot:
-    def __init__(self, token: str) -> None:
-        self.token = token
-        self.api_url = f"https://api.telegram.org/bot{self.token}"
+    """
+    A simple and easy-to-use Python wrapper for Telegram bots.
+    """
+    def __init__(self, token: str = "YOUR_BOT_TOKEN") -> None:
+        """
+        Initialize the TelegramBot instance.
 
-    def send_message(self, text: str, chat_id: int, reply_to_message: bool = False, message_id: int = None) -> dict | None:
-        """
         Args:
-            text (str): The message you want to send.
-            chat_id (int): The ID of the chat where you want to send the message.
-            reply_to_message (bool): True if you want to reply to a message. Default is False.
-            message_id (int): The ID of the message you want to reply to. It is needed if reply_to_message is True.
+            token (str): The bot token provided by BotFather.
         """
-        url = f"{self.api_url}/sendMessage"
-        if reply_to_message and message_id != None:
-            data = {
-            "text": text,
-            "chat_id": chat_id,
-            "reply_to_message_id": message_id
-            }
-        else:
-            data = {
-            "text": text,
-            "chat_id": chat_id
-            }
-        response = requests.post(url, json=data)
+        self._token = token
+        self._api_endpoint = f"https://api.telegram.org/bot{self._token}"
 
-        if response.status_code == 200:
-            return response.json()
-        else:
-            try:
-               error_msg = f"Error {response.json()["error_code"]}: {response.json()["description"]}"
-            except Exception:
-                error_msg = f"Error {response.status_code}: {response.text}"
-            finally:
-                print(error_msg)
-                return None
-    
-    def edit_message(self, text: str, chat_id: int, message_id: int) -> dict | None:
+    def get_me(self) -> dict:
         """
+        Fetch information about the bot.
+
+        Returns:
+            dict: Bot information as returned by the Telegram API.
+
+        Raises:
+            TelegramBotError: If the request fails.
+        """
+        try:
+            response = requests.get(self._api_endpoint + "/getMe")
+            response.raise_for_status()
+        except Exception as e:
+            raise TelegramBotError(e)
+
+        return response.json()
+
+    def get_updates(
+        self,
+        offset: int | None = None,
+        limit: int = 100,
+        timeout: int = 0,
+        allowed_updates: list[str] | None = None,
+    ) -> dict:
+        """
+        Fetch received messages and updates for the bot.
+
         Args:
-            text (str): New message.
-            chat_id (int): The ID of the chat where you want to send the message.
-            message_id (int): The ID of the message you want to edit.
+            offset (int, optional): Identifier of the first update to be returned.
+            limit (int, optional): Limits the number of updates to be retrieved.
+            timeout (int, optional): Timeout in seconds for long polling.
+            allowed_updates (list[str], optional): List of update types to receive.
+
+        Returns:
+            dict: Updates as returned by the Telegram API.
+
+        Raises:
+            TelegramBotError: If the request fails.
         """
-        url = f"{self.api_url}/editMessageText"
-        data = {
-            "text": text,
-            "chat_id": chat_id,
-            "message_id": message_id
-        }
-        response = requests.post(url, json=data)
+        params = {"limit": limit, "timeout": timeout}
+
+        # Optional parameters
+        if offset is not None:
+            params["offset"] = offset
+        if allowed_updates:
+            params["allowed_updates"] = json.dumps(allowed_updates)
+
+        # Send request to telegram api for updates
+        try:
+            response = requests.get(self._api_endpoint + "/getUpdates", params=params)
+            response.raise_for_status()
+        except Exception as e:
+            raise TelegramBotError(e)
+
+        return response.json()
+
+    def reset_updates(self, updates: dict | None = None) -> None:
+        """
+        Resets the update offset to skip already processed messages. If no updates are provided, it will automatically fetch new ones.
+
+        Args:
+            updates (dict, optional): The updates dictionary returned by the Telegram API.
+        """
+        if updates is None:
+            updates = self.get_updates()
+        try: 
+            if updates.get("result"):
+                last_offset = updates["result"][-1]["update_id"]
+                self.get_updates(offset=last_offset + 1)
+        except Exception as e:
+            raise TelegramBotError(e)
+
+    def send_message(
+        self,
+        text: str,
+        chat_id: int | str,
+        **kwargs
+    ) -> dict:
+        """
+        Send a message to a chat.
+
+        Args:
+            text (str): The message text to send.
+            chat_id (int | str): Unique identifier for the target chat.
+            **kwargs: Additional parameters for the Telegram API.
+
+        Returns:
+            dict: The sent message as returned by the Telegram API.
+
+        Raises:
+            TelegramBotError: If the request fails.
+        """
+        data = {"text": text, "chat_id": chat_id, **kwargs}
+
+        # Send sendMessage request
+        try:
+            response = requests.post(self._api_endpoint + "/sendMessage", data=data)
+            response.raise_for_status()
+        except Exception as e:
+            raise TelegramBotError(e)
+
+        return response.json()
+
+    def edit_message(
+        self,
+        text: str,
+        chat_id: int | str,
+        message_id: int,
+        **kwargs
+    ) -> dict:
+        """
+        Edit an existing message.
+
+        Args:
+            text (str): New text of the message.
+            chat_id (int | str): Unique identifier for the target chat.
+            message_id (int): Identifier of the message to edit.
+            **kwargs: Additional parameters for the Telegram API.
+
+        Returns:
+            dict: The edited message as returned by the Telegram API.
+
+        Raises:
+            TelegramBotError: If the request fails.
+        """
+        data = {"text": text, "chat_id": chat_id, "message_id": message_id, **kwargs}
+
+        try:
+            response = requests.post(self._api_endpoint + "/editMessageText", data=data)
+            response.raise_for_status()
+        except Exception as e:
+            raise TelegramBotError(e)
+
+        return response.json()
         
-        if response.status_code == 200:
-            return response.json()
-        else:
-            try:
-               error_msg = f"Error {response.json()["error_code"]}: {response.json()["description"]}"
-            except Exception:
-                error_msg = f"Error {response.status_code}: {response.text}"
-            finally:
-                print(error_msg)
-                return None
-
-    def get_updates(self, offset: int = None, timeout: int = 30) -> dict | None:
+    def start_loop(self, *callbacks, interval: float = 1.0) -> None:
         """
-        Get new messages.
-
-        This method gets updates from Telegram.
+        Continuously call provided callback functions at a set interval.
 
         Args:
-            offset (int): The ID of the last Update. Default is None.
-            timeout (int): How long to wait for the updates. Default is 30 seconds.
+            *callbacks: Functions to be called in each loop iteration.
+            interval (float, optional): Time in seconds to wait between iterations. Default is 1.0.
+
+        KeyboardInterrupt:
+            Stops the loop when CTRL+C is pressed.
         """
-        url = f"{self.api_url}/getUpdates"
-        data = {
-            "timeout": timeout,
-            "offset": offset
-        }
-        response = requests.post(url, json=data)
+        import time
 
-        if response.status_code == 200:
-            return response.json()
-        else:
-            try:
-               error_msg = f"Error {response.json()["error_code"]}: {response.json()["description"]}"
-            except Exception:
-                error_msg = f"Error {response.status_code}: {response.text}"
-            finally:
-                print(error_msg)
-                return None
-    
-    def reset_updates(self, updates=None, timeout=5) -> None:
-        """
-        Clear old messages and get new ones.
-
-        This method gets updates from Telegram and skips old messages.
-
-        Args:
-            updates (dict or None): Updates from `get_updates()`. If None, get new updates.
-            timeout (int): How long to wait for the updates. Default is 5 seconds.
-
-        Notes:
-            If `updates` is not provided, new updates will be fetched automatically.
-            Use the result from `get_updates()` as `updates`. (Recommended)
-        """
-        if updates:
-            offset = updates["result"][-1]["update_id"] + 1
-            self.get_updates(offset=offset, timeout=0)
-        else:
-            updates = self.get_updates(timeout=timeout)
+        print("Press CTRL+C to exit loop.")
+        try:
+            while True:
+                for func in callbacks:
+                    func()
+                time.sleep(interval)
+        except KeyboardInterrupt:
+            print("Loop stopped by user.")
