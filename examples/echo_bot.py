@@ -1,26 +1,19 @@
 from simple_telegram_api import TelegramBot
 
+bot = TelegramBot("BOT_TOKEN")
 
-BOT_TOKEN = "BOT_TOKEN"
-
-bot = TelegramBot(BOT_TOKEN)
-
-# Delete old messages before bot is running.
-bot.reset_updates()
-
-print("Bot is running.")
-while True:
+def echo_bot():
     updates = bot.get_updates()
-
-    # Check if it's empty.
     if updates["result"]:
-        print(updates)
+        for update in updates["result"]:
+            text, chat_id = (
+                update["message"]["text"],
+                update["message"]["chat"]["id"],
+            )
+            bot.send_message(text, chat_id)
+
+        # Update offset to skip already processed messages in future calls.
         bot.reset_updates(updates=updates)
 
-        # For multiple coming up messages.
-        for update in updates["result"]:
-            chat_id = update["message"]["chat"]["id"]
-            user_message = update["message"]["text"]
-            
-            bot_update = bot.send_message(user_message, chat_id=chat_id)
-            print(bot_update)
+if __name__ == "__main__":
+    bot.start_loop(echo_bot)
