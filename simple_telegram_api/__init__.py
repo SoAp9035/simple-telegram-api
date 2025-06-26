@@ -1,2 +1,1 @@
-# __init__.py
-from .main import TelegramBot
+from .main import TelegramBot, TelegramBotError
