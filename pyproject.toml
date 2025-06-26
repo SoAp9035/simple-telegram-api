@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=80.9.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "simple-telegram-api"
+version = "1.0.0"
+authors = [
+    {name = "Ahmet Burhan Kayalı", email = "ahmetburhan1703@gmail.com"},
+]
+description = "A simple and easy-to-use Python wrapper for Telegram bots."
+readme = "README.md"
+license = "MIT"
+classifiers = [
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Internet :: WWW/HTTP"
+]
+keywords = ["simple", "telegram", "bot", "api", "wrapper"]
+dependencies = [
+    "requests==2.32.4"
+]
+requires-python = ">=3.10"
+
+[project.urls]
+"Homepage" = "https://github.com/SoAp9035/simple-telegram-api"
+"Bug Tracker" = "https://github.com/SoAp9035/simple-telegram-api/issues"
