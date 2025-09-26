@@ -165,7 +165,8 @@ class TelegramBot:
             Stops the loop when CTRL+C is pressed.
         """
         import time
-
+        
+        print("Bot started.")
         print("Press CTRL+C to exit loop.")
         try:
             while True:
