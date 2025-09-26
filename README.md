@@ -8,7 +8,13 @@ To get a bot token, message [@BotFather](https://t.me/botfather) on Telegram and
 
 ## Installation
 
-Installation using pip (a Python package manager):
+[uv](https://docs.astral.sh/uv/) is recommended for managing and installing packages in isolated environments.
+
+```
+uv add simple-telegram-api
+```
+
+You can also install it using pip:
 
 ```
 pip install simple-telegram-api
@@ -233,11 +239,6 @@ bot.start_loop(get_messages, say_hello, interval=1.0)
 
 The library includes custom exception:
 - `TelegramBotError`: TelegramBot Error.
-
-## Requirements
-
-- Python >= 3.10
-- requests==2.32.4
 
 ## Recommendations
 
