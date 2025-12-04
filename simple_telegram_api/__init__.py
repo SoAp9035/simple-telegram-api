@@ -1,1 +1,2 @@
-from .main import TelegramBot, TelegramBotError
+from .main import TelegramBot
+from .exceptions import TelegramBotError
